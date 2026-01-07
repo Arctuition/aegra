@@ -26,42 +26,10 @@ def _resolve_host_port(args: argparse.Namespace) -> tuple[str, int]:
     return host, port
 
 
-def _find_alembic_root() -> Path | None:
-    candidates: list[Path] = []
-
-    env_root = os.getenv("AEGRA_MIGRATIONS_ROOT")
-    if env_root:
-        candidates.append(Path(env_root))
-
-    config_path = os.getenv("AEGRA_CONFIG")
-    if config_path:
-        candidates.append(Path(config_path).resolve().parent)
-
-    candidates.append(Path.cwd())
-
-    file_path = Path(__file__).resolve()
-    candidates.append(file_path.parent)
-    if len(file_path.parents) > 1:
-        candidates.append(file_path.parents[1])
-    if len(file_path.parents) > 2:
-        candidates.append(file_path.parents[2])
-
-    seen: set[Path] = set()
-    for root in candidates:
-        root = root.resolve()
-        if root in seen:
-            continue
-        seen.add(root)
-        if (root / "alembic.ini").exists():
-            return root
-    return None
-
-
 def _run_migrations() -> int:
-    root = _find_alembic_root()
-    if not root:
+    root = Path(__file__).resolve().parent.parent
+    if not (root / "alembic.ini").exists():
         print("alembic.ini not found. Cannot run migrations.")
-        print("Set AEGRA_MIGRATIONS_ROOT or run from a repo containing alembic.ini.")
         return 1
 
     cmd = ["alembic", "-c", str(root / "alembic.ini"), "upgrade", "head"]
