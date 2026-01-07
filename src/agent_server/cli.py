@@ -27,7 +27,8 @@ def _resolve_host_port(args: argparse.Namespace) -> tuple[str, int]:
 
 
 def _run_migrations() -> int:
-    root = Path(__file__).resolve().parent.parent
+    root = Path(__file__).resolve().parent
+    print(root)
     if not (root / "alembic.ini").exists():
         print("alembic.ini not found. Cannot run migrations.")
         return 1
