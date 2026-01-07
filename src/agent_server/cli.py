@@ -28,7 +28,6 @@ def _resolve_host_port(args: argparse.Namespace) -> tuple[str, int]:
 
 def _run_migrations() -> int:
     root = Path(__file__).resolve().parent
-    print(root)
     if not (root / "alembic.ini").exists():
         print("alembic.ini not found. Cannot run migrations.")
         return 1
@@ -64,7 +63,7 @@ def cmd_up(args: argparse.Namespace) -> int:
     logger.info("Starting Aegra", host=host, port=port)
 
     uvicorn.run(
-        "arcsitegraph.main:app",
+        "agent_server.main:app",
         host=host,
         port=port,
         reload=args.reload,
