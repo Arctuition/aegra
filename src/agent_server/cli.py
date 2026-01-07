@@ -5,7 +5,6 @@ from __future__ import annotations
 import argparse
 import os
 import subprocess
-import sys
 from pathlib import Path
 
 import structlog
@@ -13,6 +12,7 @@ import uvicorn
 from dotenv import load_dotenv
 
 from .utils.setup_logging import get_logging_config, setup_logging
+
 
 def _apply_default_env() -> None:
     """Set sane defaults for local usage without overriding user config."""
@@ -95,7 +95,7 @@ def cmd_up(args: argparse.Namespace) -> int:
     logger.info("Starting Aegra", host=host, port=port)
 
     uvicorn.run(
-        "agent_server.main:app",
+        "arcsitegraph.main:app",
         host=host,
         port=port,
         reload=args.reload,
