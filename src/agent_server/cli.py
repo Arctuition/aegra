@@ -106,7 +106,7 @@ def cmd_up(args: argparse.Namespace) -> int:
 
 
 def build_parser() -> argparse.ArgumentParser:
-    parser = argparse.ArgumentParser(prog="arcsiteagent")
+    parser = argparse.ArgumentParser(prog="arcsitegraph")
     subparsers = parser.add_subparsers(dest="command", required=True)
 
     up_parser = subparsers.add_parser("up", help="Start the Aegra server")
