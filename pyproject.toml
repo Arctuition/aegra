@@ -3,7 +3,7 @@ requires = ["hatchling"]
 build-backend = "hatchling.build"
 
 [project]
-name = "aegra"
+name = "arcsiteagent"
 version = "0.1.0"
 description = "Open source LangGraph Platform alternative - Self-hosted AI agent backend with FastAPI and PostgreSQL. Zero vendor lock-in, full control over your agent infrastructure."
 readme = "README.md"
@@ -51,6 +51,9 @@ Repository = "https://github.com/ibbybuilds/aegra"
 Documentation = "https://github.com/ibbybuilds/aegra#readme"
 "Bug Tracker" = "https://github.com/ibbybuilds/aegra/issues"
 "Feature Requests" = "https://github.com/ibbybuilds/aegra/issues"
+
+[project.scripts]
+arcsiteagent = "agent_server.cli:main"
 
 
 
