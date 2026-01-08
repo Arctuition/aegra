@@ -44,7 +44,7 @@ from .core.route_merger import (
     merge_routes,
     update_openapi_spec,
 )
-from .middleware import DoubleEncodedJSONMiddleware, StructLogMiddleware
+from .middleware import StructLogMiddleware  # DoubleEncodedJSONMiddleware disabled
 from .models.errors import AgentProtocolError, get_error_type
 from .observability.base import get_observability_manager
 from .observability.langfuse_integration import _langfuse_provider
@@ -225,7 +225,8 @@ if user_app:
             expose_headers=default_expose_headers,
         )
 
-    app.add_middleware(DoubleEncodedJSONMiddleware)
+    # Disabled: causes issues with large payloads in Docker Swarm (body chunks get duplicated)
+    # app.add_middleware(DoubleEncodedJSONMiddleware)
 
     # Apply auth middleware to custom routes if enabled
     enable_custom_route_auth = (
@@ -270,7 +271,8 @@ else:
     )
 
     # Add middleware to handle double-encoded JSON from frontend
-    app.add_middleware(DoubleEncodedJSONMiddleware)
+    # Disabled: causes issues with large payloads in Docker Swarm (body chunks get duplicated)
+    # app.add_middleware(DoubleEncodedJSONMiddleware)
 
     # Add authentication middleware (must be added after CORS)
     app.add_middleware(
