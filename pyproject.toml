@@ -1,10 +1,10 @@
 [build-system]
-requires = ["hatchling"]
-build-backend = "hatchling.build"
+requires = ["uv_build>=0.9.18,<0.10.0"]
+build-backend = "uv_build"
 
 [project]
-name = "aegra"
-version = "0.1.0"
+name = "arcsitegraph"
+version = "0.1.15"
 description = "Open source LangGraph Platform alternative - Self-hosted AI agent backend with FastAPI and PostgreSQL. Zero vendor lock-in, full control over your agent infrastructure."
 readme = "README.md"
 requires-python = ">=3.11"
@@ -52,13 +52,16 @@ Documentation = "https://github.com/ibbybuilds/aegra#readme"
 "Bug Tracker" = "https://github.com/ibbybuilds/aegra/issues"
 "Feature Requests" = "https://github.com/ibbybuilds/aegra/issues"
 
+[project.scripts]
+arcsitegraph = "agent_server.cli:main"
 
 
-[tool.hatch.build.targets.wheel]
-packages = ["src/agent_server"]
 
-[tool.hatch.build.targets.wheel.sources]
-"graphs/react_agent" = "react_agent"
+[tool.uv.build-backend]
+module-name = "agent_server"
+module-root = "src"
+source-include = [  "src/agent_server/alembic/**",
+  "src/agent_server/alembic.ini",]
 
 [tool.ruff]
 line-length = 88

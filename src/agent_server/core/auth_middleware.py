@@ -73,13 +73,40 @@ class LangGraphAuthBackend(AuthenticationBackend):
     def __init__(self) -> None:
         self.auth_instance = self._load_auth_instance()
 
+    def _find_repo_root(self) -> Path | None:
+        """Walk upward from this module to find the project root."""
+
+        current = Path(__file__).resolve().parent
+        while current != current.parent:
+            if (current / "pyproject.toml").exists() or (current / ".git").exists():
+                return current
+            current = current.parent
+        return None
+
+    def _locate_auth_file(self) -> Path | None:
+        """Find auth.py by checking repo root, agent_server package root, then cwd."""
+
+        candidates: list[Path] = []
+        repo_root = self._find_repo_root()
+        if repo_root:
+            candidates.append(repo_root)
+        candidates.append(Path(__file__).resolve().parents[1])
+        candidates.append(Path.cwd())
+
+        for base in candidates:
+            auth_path = base / "auth.py"
+            if auth_path.exists():
+                return auth_path
+        return None
+
     def _load_auth_instance(self) -> Auth | None:
         """Load the auth instance from auth.py"""
         try:
-            # Import the auth instance from the project root auth.py
-            auth_path = Path.cwd() / "auth.py"
-            if not auth_path.exists():
-                logger.warning(f"Auth file not found at {auth_path}")
+            auth_path = self._locate_auth_file()
+            if auth_path is None:
+                logger.warning(
+                    "Auth file not found in repo root, agent_server package, or current working directory"
+                )
                 return None
 
             spec = importlib.util.spec_from_file_location("auth_module", str(auth_path))

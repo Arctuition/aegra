@@ -9,10 +9,9 @@ from sqlalchemy import pool
 from sqlalchemy.engine import Connection
 from sqlalchemy.ext.asyncio import async_engine_from_config
 
-from alembic import context
-
 # Import your SQLAlchemy models here
-from src.agent_server.core.orm import Base
+from agent_server.core.orm import Base
+from alembic import context
 
 # Load environment variables from a .env file if present
 load_dotenv()
