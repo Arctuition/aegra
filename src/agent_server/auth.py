@@ -27,8 +27,36 @@ if AUTH_TYPE == "noop":
 
     @auth.authenticate
     async def authenticate(headers: dict[str, str]) -> Auth.types.MinimalUserDict:
-        """No-op authentication that allows all requests."""
-        _ = headers  # Suppress unused warning
+        """No-op authentication that allows all requests.
+
+        Supports optional user identification via headers for observability:
+        - X-User-ID: User identifier (e.g., SaaS user ID) for Langfuse tracking
+
+        If X-User-ID is provided, it will be used for user tracking in Langfuse.
+        """
+        # Try to extract user_id from header (case-insensitive, support bytes)
+        user_id = None
+
+        # Check for user ID in headers (support both string and bytes keys)
+        for key in ["x-user-id", "X-User-ID", b"x-user-id", b"X-User-ID"]:
+            if key in headers:
+                value = headers[key]
+                # Handle bytes headers
+                if isinstance(value, bytes):
+                    value = value.decode("utf-8")
+                user_id = value
+                break
+
+        # If user_id is provided, use it; otherwise default to anonymous
+        if user_id:
+            logger.debug(f"Identified user from headers: {user_id}")
+            return {
+                "identity": user_id,
+                "display_name": user_id,
+                "is_authenticated": True,
+            }
+
+        # Default anonymous user
         return {
             "identity": "anonymous",
             "display_name": "Anonymous User",
