@@ -4,7 +4,7 @@ build-backend = "uv_build"
 
 [project]
 name = "arcsitegraph"
-version = "0.1.15"
+version = "0.1.16"
 description = "Open source LangGraph Platform alternative - Self-hosted AI agent backend with FastAPI and PostgreSQL. Zero vendor lock-in, full control over your agent infrastructure."
 readme = "README.md"
 requires-python = ">=3.11"
